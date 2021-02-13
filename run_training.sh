@@ -3,4 +3,4 @@ python train.py \
 --envs_file trainEnvironments.pkl --path_data_file trainPaths.pkl \
 --trained_model_path ./models/sample/ \
 --batch_size 100 --learning_rate 0.001  --num_epochs 200 \
---enc_input_size 16053 --enc_output_size 60 --mlp_input_size 74 --mlp_output_size 7 \
+--enc_input_size 16053 --enc_output_size 60 --mlp_input_size 76 --mlp_output_size 8 \
