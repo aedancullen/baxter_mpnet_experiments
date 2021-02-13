@@ -28,6 +28,8 @@ class fileImport():
 		
 		Return: new_paths (list) - list of numpy arrays, same dimension as input
 		"""
+		return paths
+		
 		new_paths = []
 		for path in paths:
 			new_path = np.zeros((path.shape[0], 7))

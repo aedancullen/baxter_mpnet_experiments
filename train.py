@@ -51,7 +51,8 @@ def main(args):
     path_data_path = args.path_data_path
     pcd_data_path = args.pointcloud_data_path
 
-    envs = importer.environments_import(env_data_path + args.envs_file)
+    #envs = importer.environments_import(env_data_path + args.envs_file)
+    envs = ["testEnv"]
 
     print("Loading obstacle data...\n")
     dataset_train, targets_train, pc_inds_train, obstacles = load_dataset_end2end(

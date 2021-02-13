@@ -1,5 +1,5 @@
 import argparse
-import pickle
+import cPickle as pickle
 import os
 import numpy as np
 import yaml

@@ -70,7 +70,7 @@ def load_normalized_dataset(env_names,pcd_data_path,importer,min_length=(5351*3)
 	for i, env in enumerate(env_names):
 		# hacky reordering so that we don't load the last .pcd file which is always corrupt
 		# sort by the time step on the back, which helps us obtain the earliest possible
-		for file in sorted(os.listdir(pcd_data_path), key=lambda x: int(x.split('Env_')[1].split('_')[1][:-4])):
+		for file in sorted(os.listdir(pcd_data_path), key=lambda x: int(0)):#int(x.split('Env_')[1].split('_')[1][:-4])):
 			if (fnmatch.fnmatch(file, env+"*")):
 				fnames.append(file)
 				break
