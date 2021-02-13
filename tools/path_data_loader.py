@@ -12,6 +12,8 @@ from import_tool import fileImport
 import fnmatch
 from obs_data_loader import load_normalized_dataset
 
+NJOINTS=8
+
 # Environment Encoder
 # class Encoder(nn.Module):
 # 	def __init__(self):
@@ -67,7 +69,7 @@ def load_dataset_end2end(env_names, data_path, pcd_path, path_data_file, importe
 	### obtain path data ###
 
 	# padded paths #7D from 2D originally
-	paths = np.zeros((N, NP, max_length, 7), dtype=np.float32)
+	paths = np.zeros((N, NP, max_length, NJOINTS), dtype=np.float32)
 	for i, env in enumerate(env_names):
 		env_paths = importer.paths_import_single(
 			path_fname=data_path+paths_file, env_name=env, single_env=False)
@@ -90,11 +92,11 @@ def load_dataset_end2end(env_names, data_path, pcd_path, path_data_file, importe
 		for j in range(0, NP):
 			if path_lengths[i][j] > 0:
 				for m in range(0, path_lengths[0][j]-1):
-					data = np.zeros(14, dtype=np.float32)
+					data = np.zeros(2*NJOINTS, dtype=np.float32)
 
-					for joint in range(7):
+					for joint in range(NJOINTS):
 						data[joint] = paths[i][j][m][joint]
-						data[joint + 7] = paths[i][j][path_lengths[i][j] - 1][joint]
+						data[joint + NJOINTS] = paths[i][j][path_lengths[i][j] - 1][joint]
 
 					pointcloud_inds.append(i)
 					targets.append(paths[i][j][m+1])
