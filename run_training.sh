@@ -1,5 +1,5 @@
 python train.py \
---env_data_path ./env/environment_data/ --path_data_path ./data/train/paths/ --pointcloud_data_path ./data/train/pcd/ \
+--env_data_path ~/small_pick_5k/ --path_data_path ~/small_pick_5k/ --pointcloud_data_path ~/small_pick_5k/ \
 --envs_file trainEnvironments.pkl --path_data_file trainPaths.pkl \
 --trained_model_path ./models/sample/ \
 --batch_size 100 --learning_rate 0.001  --num_epochs 200 \
