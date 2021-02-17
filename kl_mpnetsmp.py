@@ -43,6 +43,8 @@ def main(args):
         
     
     env_names = []
+    start_states = []
+    goal_states = []
         
     i = 0
     for filename in os.listdir(yaml_dir):
@@ -60,23 +62,28 @@ def main(args):
             for k in range(dofs):
                 goal_state.append(request_data['goal_constraints'][0]['joint_constraints'][k]['position'])
     
+            start_states.append(start_state)
+            goal_states.append(goal_state)
             i += 1
+            break
 
     clouds = load_normalized_dataset(env_names, pcd_dir, importer)
     
-    #obs=torch.from_numpy(obs)
-
-    #en_inp=to_var(obs)
-    #h=encoder(en_inp)
-    return
-    start=np.zeros(dof,dtype=np.float32)
-    goal=np.zeros(dof,dtype=np.float32)
     
-    start=torch.from_numpy(start)
-    goal=torch.from_numpy(goal)
-    
-    for n in range(smp_total_samples):
-        if i < smp_max_neural:
+    for start_state, goal_state, cloud in zip(start_states, goal_states, clouds):
+        samples = []
+        
+        start=np.array(start_state, dtype=np.float32)
+        goal=np.array(goal_state, dtype=np.float32)
+        
+        start=torch.from_numpy(start)
+        goal=torch.from_numpy(goal)
+        
+        cloud=torch.from_numpy(cloud)
+        en_inp=to_var(cloud)
+        h=encoder(en_inp)
+        
+        for n in range(nsmp):
             inp=torch.cat((start,goal,h.data.cpu()))
             inp=to_var(inp)
             inp=mlp(inp)
