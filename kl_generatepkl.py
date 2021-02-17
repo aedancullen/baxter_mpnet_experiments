@@ -12,7 +12,7 @@ def main(args):
     trainEnvironments = {'poses': {}}
 
     i = 0
-    for filename in os.listdir(yaml_dir):
+    for filename in sorted(os.listdir(yaml_dir)):
         if filename.startswith('path'):
             fullname = os.path.join(yaml_dir, filename)
             with open(fullname, 'r') as handle:
@@ -27,6 +27,7 @@ def main(args):
                 trainPaths[env][0][pos_idx, :] = pos_data['positions']
                 
             i += 1
+            print('Loaded ' + filename)
         
     with open(pkl_dir + '/trainPaths.pkl', 'wb') as handle:
         pickle.dump(trainPaths, handle)

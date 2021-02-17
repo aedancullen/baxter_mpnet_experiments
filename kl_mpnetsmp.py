@@ -32,10 +32,10 @@ def main(args):
     encoder = Encoder(args.enc_input_size, args.enc_output_size)
     mlp = MLP(args.mlp_input_size, args.mlp_output_size)
     
-    device = torch.device('cpu')
+    #device = torch.device('cpu')
     model_path = args.model_path
-    mlp.load_state_dict(torch.load(model_path+args.mlp_model_name, map_location=device))
-    encoder.load_state_dict(torch.load(model_path+args.enc_model_name, map_location=device))
+    mlp.load_state_dict(torch.load(model_path+args.mlp_model_name, ))#map_location=device))
+    encoder.load_state_dict(torch.load(model_path+args.enc_model_name, ))#map_location=device))
 
     if torch.cuda.is_available():
         encoder.cuda()
@@ -47,7 +47,7 @@ def main(args):
     goal_states = []
         
     i = 0
-    for filename in os.listdir(yaml_dir):
+    for filename in sorted(os.listdir(yaml_dir)):
         if filename.startswith('request'):
             fullname = os.path.join(yaml_dir, filename)
             with open(fullname, 'r') as handle:
@@ -64,31 +64,53 @@ def main(args):
     
             start_states.append(start_state)
             goal_states.append(goal_state)
+            
             i += 1
-            break
+            print('Loaded ' + filename)
+
 
     clouds = load_normalized_dataset(env_names, pcd_dir, importer)
     
     
-    for start_state, goal_state, cloud in zip(start_states, goal_states, clouds):
+    for i in range(len(env_names)):
+        start_state = start_states[i]
+        goal_state = goal_states[i]
+        cloud = clouds[i]
+        
         samples = []
         
-        start=np.array(start_state, dtype=np.float32)
-        goal=np.array(goal_state, dtype=np.float32)
+        start_array = np.array(start_state, dtype=np.float32)
+        goal_array = np.array(goal_state, dtype=np.float32)
         
-        start=torch.from_numpy(start)
-        goal=torch.from_numpy(goal)
+        current = torch.from_numpy(start_array)
+        goal = torch.from_numpy(goal_array)
         
-        cloud=torch.from_numpy(cloud)
-        en_inp=to_var(cloud)
-        h=encoder(en_inp)
+        cloud = torch.from_numpy(cloud)
+        en_inp = to_var(cloud)
+        h = encoder(en_inp)
         
         for n in range(nsmp):
-            inp=torch.cat((start,goal,h.data.cpu()))
-            inp=to_var(inp)
-            inp=mlp(inp)
-            inp=inp.data.cpu()
-            samples.append(inp)
+            inp = torch.cat((current, goal, h.data.cpu()))
+            inp = to_var(inp)
+            current = mlp(inp)
+            current = current.data.cpu()
+            samples.append(current)
+            
+            if all(np.abs(current - goal) < 0.5):
+                print("reset")
+                current = torch.from_numpy(start_array)
+            
+        csv_filename = 'precomputed' + str(i) + '.csv'
+        with open(csv_dir + '/' + csv_filename, 'w') as handle:
+            for sample in samples:
+                for idx, dim in enumerate(sample):
+                    if idx != 0:
+                        handle.write(',')
+                    handle.write(str(float(dim)))
+                    if idx == len(sample)-1:
+                        handle.write('\n')
+                        
+        print('Generated ' + csv_filename)
 
 
 if __name__ == "__main__":
@@ -103,7 +125,7 @@ if __name__ == "__main__":
     parser.add_argument('--mlp_output_size', type=int, default=8)
     
     # Number of samples to output
-    parser.add_argument('--nsmp', type=int, default=100)
+    parser.add_argument('--nsmp', type=int, default=1000)
     
     parser.add_argument('--pcd_dir', type=str, default='.')
     parser.add_argument('--yaml_dir', type=str, default='.')
