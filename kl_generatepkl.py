@@ -17,16 +17,15 @@ def main(args):
             fullname = os.path.join(yaml_dir, filename)
             with open(fullname, 'r') as handle:
                 yaml_data = yaml.load(handle)
-                
-            points = yaml_data['joint_trajectory']['points']
             env = 'sample' + str(i)
+            
+            points = yaml_data['joint_trajectory']['points']
             trainEnvironments['poses'][env] = None
             trainPaths[env] = [np.zeros((len(points), len(points[0]['positions'])))]
             
             for pos_idx, pos_data in enumerate(points):
                 trainPaths[env][0][pos_idx, :] = pos_data['positions']
                 
-            print('loaded ' + env)
             i += 1
         
     with open(pkl_dir + '/trainPaths.pkl', 'wb') as handle:
