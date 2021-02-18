@@ -101,7 +101,7 @@ def main(args):
                 print("reset")
                 current = torch.from_numpy(start_array)
             
-        csv_filename = 'precomputed' + str(i) + '.csv'
+        csv_filename = 'precomputed' + str(i + 1) + '.csv'
         with open(csv_dir + '/' + csv_filename, 'w') as handle:
             for sample in samples:
                 for idx, dim in enumerate(sample):
