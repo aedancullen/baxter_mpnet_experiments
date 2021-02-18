@@ -24,6 +24,7 @@ dofs = len(start_st_ind)
 def main(args):
     importer = fileImport()
     nsmp = args.nsmp
+    goal_distance = args.goal_distance
     pcd_dir = args.pcd_dir
     yaml_dir = args.yaml_dir
     csv_dir = args.csv_dir
@@ -96,7 +97,7 @@ def main(args):
             current = current.data.cpu()
             samples.append(current)
             
-            if all(np.abs(current - goal) < 0.5):
+            if np.linalg.norm(current - goal) < goal_distance:
                 print("reset")
                 current = torch.from_numpy(start_array)
             
@@ -126,6 +127,7 @@ if __name__ == "__main__":
     
     # Number of samples to output
     parser.add_argument('--nsmp', type=int, default=1000)
+    parser.add_argument('--goal_distance', type=int, default=1)
     
     parser.add_argument('--pcd_dir', type=str, default='.')
     parser.add_argument('--yaml_dir', type=str, default='.')
