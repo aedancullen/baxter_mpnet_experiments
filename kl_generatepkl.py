@@ -11,7 +11,7 @@ def main(args):
     trainPaths = {}
     trainEnvironments = {'poses': {}}
 
-    i = 0
+    i = 1
     for filename in sorted(os.listdir(yaml_dir)):
         if filename.startswith('path'):
             fullname = os.path.join(yaml_dir, filename)
