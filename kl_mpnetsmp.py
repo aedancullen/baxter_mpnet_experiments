@@ -117,8 +117,8 @@ def main(args):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('--model_path', type=str, default='./models/sample/')
-    parser.add_argument('--mlp_model_name', type=str, default='mlp_PReLU_ae_dd140.pkl')
-    parser.add_argument('--enc_model_name', type=str, default='cae_encoder_140.pkl')
+    parser.add_argument('--mlp_model_name', type=str, default='mlp_PReLU_ae_dd190.pkl')
+    parser.add_argument('--enc_model_name', type=str, default='cae_encoder_190.pkl')
 
     parser.add_argument('--enc_input_size', type=int, default=16053)
     parser.add_argument('--enc_output_size', type=int, default=60)
@@ -127,7 +127,7 @@ if __name__ == "__main__":
     
     # Number of samples to output
     parser.add_argument('--nsmp', type=int, default=1000)
-    parser.add_argument('--goal_distance', type=int, default=1)
+    parser.add_argument('--goal_distance', type=float, default=1)
     
     parser.add_argument('--pcd_dir', type=str, default='.')
     parser.add_argument('--yaml_dir', type=str, default='.')
