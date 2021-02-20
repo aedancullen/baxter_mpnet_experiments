@@ -107,7 +107,7 @@ def main(args):
             samples.append(rescale_joints(np.array(current, dtype=np.float32)))
             
             if np.linalg.norm(current - goal) < goal_distance:
-                #print("reset")
+                print("reset")
                 current = torch.from_numpy(start_array)
             
         csv_filename = 'precomputed' + str(i + 1) + '.csv'
@@ -135,7 +135,7 @@ if __name__ == "__main__":
     parser.add_argument('--mlp_output_size', type=int, default=8)
     
     # Number of samples to output
-    parser.add_argument('--nsmp', type=int, default=1000)
+    parser.add_argument('--nsmp', type=int, default=50000)
     parser.add_argument('--goal_distance', type=float, default=1)
     
     parser.add_argument('--pcd_dir', type=str, default='.')
