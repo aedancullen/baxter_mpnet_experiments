@@ -14,8 +14,12 @@ import pypcd
 
 class fileImport():
 	def __init__(self):
-		#parameters of the baxter
-		self.joint_range = np.array([3.4033, 3.194, 6.117, 3.6647, 6.117, 6.1083, 2.67])
+		#parameters of the fetch
+		# [torso_lift_joint, shoulder_pan_joint, shoulder_lift_joint, upperarm_roll_joint,
+		#	elbow_flex_joint, forearm_roll_joint, wrist_flex_joint, wrist_roll_joint]
+		self.joint_limit_upper = np.array([0.38615, 1.6056,  1.518,  3.1416,  2.251,  3.1416,  2.16,  3.1416])
+		self.joint_limit_lower = np.array([0,      -1.6056, -1.221, -3.1416, -2.251, -3.1416, -2.16, -3.1416])
+		self.joint_range = self.joint_limit_upper - self.joint_limit_lower
 		self.joint_names = ['s0', 's1', 'w0', 'w1', 'w2', 'e0', 'e1']
 
 	def moveit_unscramble(self, paths):
@@ -28,16 +32,14 @@ class fileImport():
 		
 		Return: new_paths (list) - list of numpy arrays, same dimension as input
 		"""
-		return paths
-		
 		new_paths = []
 		for path in paths:
-			new_path = np.zeros((path.shape[0], 7))
-			new_path[:, 0:2] = path[:, 0:2] #replace proper indices in each path
-			new_path[:, 2:5] = path[:, 4:]
-			new_path[:, 5:] = path[:, 2:4]
+			#new_path = np.zeros((path.shape[0], 7))
+			#new_path[:, 0:2] = path[:, 0:2] #replace proper indices in each path
+			#new_path[:, 2:5] = path[:, 4:]
+			#new_path[:, 5:] = path[:, 2:4]
 
-			new_path = np.divide(new_path, self.joint_range) #normalize with joint range
+			new_path = np.divide(path - self.joint_limit_lower, self.joint_range) #normalize with joint range
 			new_paths.append(new_path)
 
 		return new_paths
