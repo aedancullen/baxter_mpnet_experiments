@@ -20,6 +20,15 @@ from tools.obs_data_loader import load_normalized_dataset
 start_st_ind = [2,6,7,8,9,10,11,12]
 dofs = len(start_st_ind)
 
+joint_limit_upper = np.array([0.38615, 1.6056,  1.518,  3.1416,  2.251,  3.1416,  2.16,  3.1416])
+joint_limit_lower = np.array([0,      -1.6056, -1.221, -3.1416, -2.251, -3.1416, -2.16, -3.1416])
+joint_range = joint_limit_upper - joint_limit_lower
+
+def normalize_joints(point):
+    return np.divide(point - joint_limit_lower, joint_range, dtype=np.float32)
+
+def rescale_joints(point):
+    return np.multiply(point, joint_range, dtype=np.float32) + joint_limit_lower
 
 def main(args):
     importer = fileImport()
@@ -80,9 +89,9 @@ def main(args):
         
         samples = []
         
-        start_array = np.array(start_state, dtype=np.float32)
-        goal_array = np.array(goal_state, dtype=np.float32)
-        
+        start_array = normalize_joints(np.array(start_state, dtype=np.float32))
+        goal_array = normalize_joints(np.array(goal_state, dtype=np.float32))
+
         current = torch.from_numpy(start_array)
         goal = torch.from_numpy(goal_array)
         
@@ -95,10 +104,10 @@ def main(args):
             inp = to_var(inp)
             current = mlp(inp)
             current = current.data.cpu()
-            samples.append(current)
+            samples.append(rescale_joints(np.array(current, dtype=np.float32)))
             
             if np.linalg.norm(current - goal) < goal_distance:
-                print("reset")
+                #print("reset")
                 current = torch.from_numpy(start_array)
             
         csv_filename = 'precomputed' + str(i + 1) + '.csv'
