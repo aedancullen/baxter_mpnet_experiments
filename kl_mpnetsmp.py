@@ -77,7 +77,8 @@ def main(args):
             
             i += 1
             print('Loaded ' + filename)
-
+            if i == 101:
+                break
 
     clouds = load_normalized_dataset(env_names, pcd_dir, importer)
     
@@ -104,9 +105,10 @@ def main(args):
             inp = to_var(inp)
             current = mlp(inp)
             current = current.data.cpu()
-            samples.append(rescale_joints(np.array(current, dtype=np.float32)))
+            current_array = np.array(current, dtype=np.float32)
+            samples.append(rescale_joints(current_array))
             
-            if np.linalg.norm(current - goal) < goal_distance:
+            if np.linalg.norm(rescale_joints(current_array) - rescale_joints(goal_array)) < goal_distance:
                 print("reset")
                 current = torch.from_numpy(start_array)
             
