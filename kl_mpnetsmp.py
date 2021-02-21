@@ -138,7 +138,7 @@ if __name__ == "__main__":
     
     # Number of samples to output
     parser.add_argument('--nsmp', type=int, default=50000)
-    parser.add_argument('--goal_distance', type=float, default=1)
+    parser.add_argument('--goal_distance', type=float, default=2)
     
     parser.add_argument('--pcd_dir', type=str, default='.')
     parser.add_argument('--yaml_dir', type=str, default='.')
