@@ -24,7 +24,7 @@ def main(args):
             trainPaths[env] = [np.zeros((len(points), len(points[0]['positions'])))]
             
             for pos_idx, pos_data in enumerate(points):
-                trainPaths[env][0][pos_idx, :] = pos_data['positions']
+                trainPaths[env][0][len(points) - 1 - pos_idx, :] = pos_data['positions']
                 
             i += 1
             print('Loaded ' + filename)

@@ -72,8 +72,8 @@ def main(args):
             for k in range(dofs):
                 goal_state.append(request_data['goal_constraints'][0]['joint_constraints'][k]['position'])
     
-            start_states.append(start_state)
-            goal_states.append(goal_state)
+            start_states.append(goal_state)
+            goal_states.append(start_state)
             
             i += 1
             print('Loaded ' + filename)
@@ -128,8 +128,8 @@ def main(args):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('--model_path', type=str, default='./models/sample/')
-    parser.add_argument('--mlp_model_name', type=str, default='mlp_PReLU_ae_dd190.pkl')
-    parser.add_argument('--enc_model_name', type=str, default='cae_encoder_190.pkl')
+    parser.add_argument('--mlp_model_name', type=str, default='mlp_PReLU_ae_dd140.pkl')
+    parser.add_argument('--enc_model_name', type=str, default='cae_encoder_140.pkl')
 
     parser.add_argument('--enc_input_size', type=int, default=16053)
     parser.add_argument('--enc_output_size', type=int, default=60)
