@@ -108,7 +108,8 @@ def main(args):
             current_array = np.array(current, dtype=np.float32)
             samples.append(rescale_joints(current_array))
             
-            if np.linalg.norm(rescale_joints(current_array) - rescale_joints(goal_array)) < goal_distance:
+            #if np.linalg.norm(rescale_joints(current_array) - rescale_joints(goal_array)) < goal_distance:
+            if n % 350 == 0:
                 print("reset")
                 current = torch.from_numpy(start_array)
             
@@ -127,7 +128,7 @@ def main(args):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument('--model_path', type=str, default='./models/sample/')
+    parser.add_argument('--model_path', type=str, default='./models-dropout0.001-backwards-5k/')
     parser.add_argument('--mlp_model_name', type=str, default='mlp_PReLU_ae_dd140.pkl')
     parser.add_argument('--enc_model_name', type=str, default='cae_encoder_140.pkl')
 
