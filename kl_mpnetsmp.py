@@ -106,12 +106,15 @@ def main(args):
             current = mlp(inp)
             current = current.data.cpu()
             current_array = np.array(current, dtype=np.float32)
-            samples.append(rescale_joints(current_array))
-            
+            rescaled_array = rescale_joints(current_array)
+
             #if np.linalg.norm(rescale_joints(current_array) - rescale_joints(goal_array)) < goal_distance:
-            if n % 350 == 0:
+            if n % 350 == 0 or np.any(np.greater(rescaled_array, joint_limit_upper)) or np.any(np.less(rescaled_array, joint_limit_lower)):
                 print("reset")
                 current = torch.from_numpy(start_array)
+            else:
+                samples.append(rescaled_array)
+
             
         csv_filename = 'precomputed' + str(i + 1) + '.csv'
         with open(csv_dir + '/' + csv_filename, 'w') as handle:
